@@ -24,9 +24,22 @@ object PartOne extends App {
     case (Nil(), _) => right
     case (Cons(h, t), right) => Cons(h, append(t, right))
 
+  println()
   println("***** Task1 - 1b - Append *****")
 
   val tail = Cons(40, Nil())
   println(append(lst, tail)) // Cons (10 , Cons (20 , Cons (30 , Cons (40 , Nil ()))))
 
+  def flatMap[A,B](l: List[A])(f: A => List[B]): List[B] = l match
+    case Nil() => Nil()
+    case Cons(h, t) => append(f(h), flatMap(t)(f))
+
+
+  val somma: Int => (Int => Int) = x => y => x+y
+  somma(5)(10)
+
+  println()
+  println("***** Task1 - 1c - FlatMap *****")
+  println(flatMap(lst)(v => Cons(v + 1, Nil()))) // Cons (11 , Cons (21 , Cons (31 , Nil ())))
+  println(flatMap(lst)(v => Cons(v + 1, Cons(v + 2, Nil())))) // Cons (11 , Cons (12 , Cons (21 , Cons (22 , Cons (31 , Cons (32 , Nil ()))))))
 }
