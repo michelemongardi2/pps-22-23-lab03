@@ -34,12 +34,26 @@ object PartOne extends App {
     case Nil() => Nil()
     case Cons(h, t) => append(f(h), flatMap(t)(f))
 
-
-  val somma: Int => (Int => Int) = x => y => x+y
-  somma(5)(10)
-
   println()
   println("***** Task1 - 1c - FlatMap *****")
   println(flatMap(lst)(v => Cons(v + 1, Nil()))) // Cons (11 , Cons (21 , Cons (31 , Nil ())))
   println(flatMap(lst)(v => Cons(v + 1, Cons(v + 2, Nil())))) // Cons (11 , Cons (12 , Cons (21 , Cons (22 , Cons (31 , Cons (32 , Nil ()))))))
+
+  def map[A, B](l: List[A])(mapper: A => B): List[B] = l match
+    case Nil() => Nil()
+    case _ => flatMap(l)(a => Cons(mapper(a), Nil()))
+
+  println()
+  println("***** Task1 - 1d - Map *****")
+  println(map(lst)(x => x+2)) // Cons (12 , Cons (22 , Cons (32 , Nil ())))
+
+  def filter[A](l: List[A])(predicate: A => Boolean): List[A] = flatMap(l)(predicateToCons(predicate))
+
+  def predicateToCons[A](pred: A => Boolean): (A => List[A]) = a => if(pred(a)) Cons(a, Nil()) else Nil()
+
+  println()
+  println("***** Task1 - 1d - Filter *****")
+  val list = Cons(10, Cons(20, Cons(9, Cons(30, Cons(1, Cons(5, Nil()))))))
+  println(filter(list)(x => x > 10)) // Cons (20 , Cons (30 , Nil ())))
+
 }
