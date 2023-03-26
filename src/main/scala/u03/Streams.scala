@@ -1,5 +1,9 @@
 package u03
 
+import u03.Streams.Stream.{cons, constant, iterate}
+
+import scala.annotation.tailrec
+
 object Streams extends App :
 
   import Lists.*
@@ -37,6 +41,13 @@ object Streams extends App :
     def iterate[A](init: => A)(next: A => A): Stream[A] =
       cons(init, iterate(next(init))(next))
 
+    @tailrec
+    def drop[A](s: Stream[A])(n: Int): Stream[A] = (s, n) match
+      case (Cons(_, tail), n) if n > 0 => drop(tail())(n-1)
+      case _ => s
+
+    def constant[A](k: A): Stream[A] = iterate(k)(k => k)
+
   end Stream
 
   // var simplifies chaining of functions a bit..
@@ -48,3 +59,12 @@ object Streams extends App :
 
   val corec: Stream[Int] = Stream.cons(1, corec) // {1,1,1,..}
   println(Stream.toList(Stream.take(corec)(10))) // [1,1,..,1]
+
+  val s = Stream.take(Stream.iterate(0)(_ + 1))(10) //{0,1,2,3,4,5,..9}
+  println(Stream.toList(Stream.drop(s)(6))) // => Cons (6, Cons (7, Cons (8, Cons (9, Nil ()))))
+
+  println(Stream.toList(Stream.take(constant("x"))(5))) // => Cons (x, Cons (x, Cons (x, Cons (x, Cons (x, Nil ())))))
+
+  val fibs: Stream[Int] = fibo(0, 1)
+  def fibo(x: Int, y: Int): Stream[Int] = cons(x, fibo(y, (x+y)))
+  println(Stream.toList(Stream.take(fibs)(8))) // => Cons (0, Cons (1, Cons (1, Cons (2, Cons (3, Cons (5, Cons(8, Cons(13, Nil()))) ) ) ) ) )
