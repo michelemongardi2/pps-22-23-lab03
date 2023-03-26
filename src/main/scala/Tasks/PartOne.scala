@@ -20,9 +20,9 @@ object PartOne extends App {
   println(drop(lst, 2)) // Cons (30 , Nil ())
   println(drop(lst, 5)) // Nil ()
 
-  def append[A](left: List[A], right: List[A]): List[A] = (left, right) match
-    case (Nil(), _) => right
-    case (Cons(h, t), right) => Cons(h, append(t, right))
+  def append[A](left: List[A], right: List[A]): List[A] = left match
+    case Nil() => right
+    case Cons(h, t) => Cons(h, append(t, right))
 
   println()
   println("***** Task1 - 1b - Append *****")
@@ -48,12 +48,32 @@ object PartOne extends App {
   println(map(lst)(x => x+2)) // Cons (12 , Cons (22 , Cons (32 , Nil ())))
 
   def filter[A](l: List[A])(predicate: A => Boolean): List[A] = flatMap(l)(predicateToCons(predicate))
-
   def predicateToCons[A](pred: A => Boolean): (A => List[A]) = a => if(pred(a)) Cons(a, Nil()) else Nil()
 
   println()
   println("***** Task1 - 1d - Filter *****")
   val list = Cons(10, Cons(20, Cons(9, Cons(30, Cons(1, Cons(5, Nil()))))))
   println(filter(list)(x => x > 10)) // Cons (20 , Cons (30 , Nil ())))
+
+  /**
+   * Task 2
+   */
+
+  import u02.Optionals.*
+  import Option.*
+
+  def max(l: List[Int]): Option[Int] = findMax(l, None())
+  @tailrec
+  def findMax(l: List[Int], maxOpt: Option[Int]): Option[Int] = (l, maxOpt) match
+    case (Nil(), _) => maxOpt
+    case (Cons(h, t), None()) => findMax(t, Some(h))
+    case (Cons(h, t), Some(a)) =>
+      val newMax = if(a < h) Some(h) else maxOpt
+      findMax(t, newMax)
+
+  println()
+  println("***** Task2 - Max *****")
+  println(max(Cons(10, Cons(25, Cons(20, Nil()))))) // Some (25)
+  println(max(Nil())) // None ()
 
 }
