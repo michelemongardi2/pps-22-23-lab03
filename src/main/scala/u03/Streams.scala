@@ -1,7 +1,6 @@
 package u03
 
 import u03.Streams.Stream.{cons, constant, iterate}
-
 import scala.annotation.tailrec
 
 object Streams extends App :
