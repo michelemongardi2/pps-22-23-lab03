@@ -1,5 +1,7 @@
 package Tasks
 
+import scala.annotation.tailrec
+
 object PartTwo extends App {
 
   import u03.Lists.*
@@ -33,6 +35,7 @@ object PartTwo extends App {
   println("***** Task Part2 - betterGetCourse *****")
   println(betterGetCourses(profs)) //Cons(Machine Learning, Cons(Applicazioni e servizi web, Cons(Accountability, Nil())))
 
+  @tailrec
   def foldLeft(l: List[Int])(default: Int)(f: (Int, Int) => Int): Int = l match
     case Cons(h, t) => foldLeft(t)(f(default, h))(f)
     case Nil() => default
@@ -47,6 +50,7 @@ object PartTwo extends App {
   println("***** Task Part2 - foldLeft *****")
   println(foldLeft(list)(0)(_ - _)) // -16
   println(foldLeft(Nil())(0)(_ + _)) // 0
+
   println()
   println("***** Task Part2 - foldRight *****")
   println(foldRight(list)(0)(_ - _)) // -8 --> (3-(7-(1-(5-0))))
